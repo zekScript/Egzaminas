@@ -94,11 +94,17 @@ const handlePostDelete = async (params) =>{
                     Sukurtas: {new Date(post.createdAt).toLocaleDateString()}
                   </span>
                   <a
+                    href={`/${post._id}/renginys`}
+                    className="btn btn-sm btn-outline-primary float-end"
+                  >
+peržiūra                  </a>
+                  <a
                     href={`/edit?p=${post._id}`}
                     className="btn btn-sm btn-outline-primary float-end"
                   >
                     Redaguoti
                   </a>
+                  
                   {/* <button className='btn btn-danger' onClick={() => handlePostDelete(post._id)}>Ištrinti</button> */}
                   <button
                     onClick={() => handlePostDelete(post._id)}
