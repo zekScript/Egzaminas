@@ -4,6 +4,7 @@ import React, {useState, useEffect} from 'react'
 import { useNavigate, useParams } from "react-router";
 import { truncateText } from "../../truncText/TruncText";
 import { getCurrentUser } from "../../getCurrentUser/getCurrentUser";
+import {toast} from "react-hot-toast"
 
 const ViewPosts = () => {
   const { id } = useParams();
@@ -41,7 +42,14 @@ const handlePostDelete = async (params) =>{
       method: "DELETE",
     })
     if(reqDeletion.ok){
-      alert("post deleted")
+      toast.error(
+              `Skelbimas sėkmingai Ištrintas. Puslapis persikraus per 5 sekundes`,
+              {
+                position: "top-right",
+                duration: 3000,
+              }
+            );
+      setTimeout(() => window.location.reload(), 5000)
     }
   }
   catch(err){
@@ -76,11 +84,14 @@ const handlePostDelete = async (params) =>{
             <div className="card h-100 shadow-sm ticket-card">
               <div className="card-body d-flex flex-column">
                 <p className="card-text flex-grow-1">
-                  {post.carName} {post.model} {post.carType}
+                  {post.title}
+                </p>
+                <p>
+                  {truncateText(post.description, 25)}
                 </p>
                 <div className="mt-auto">
                   <span className="badge bg-secondary me-2">
-                    {new Date(post.createdAt).toLocaleDateString()}
+                    Sukurtas: {new Date(post.createdAt).toLocaleDateString()}
                   </span>
                   <a
                     href={`/edit?p=${post._id}`}

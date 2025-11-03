@@ -50,14 +50,7 @@ const SignIn = () => {
     
     <main className="form-signin w-100 m-auto">
       <form onSubmit={handleSignIn}>
-        <img
-          className="mb-4"
-          src="/home.png"
-          alt=""
-          width="72"
-          height="57"
-
-        />
+        
 
        
         <h1 className="h3 mb-3 fw-normal">Please sign in</h1>

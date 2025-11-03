@@ -109,7 +109,7 @@ const Navbar = () => {
             href="/"
             className="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto link-body-emphasis text-decoration-none cursor-pointer"
           >
-            <span className="fs-4">AutoHub.lt</span>
+            <span className="fs-4">SkelbiuHub.org</span>
           </a>
           <a href="/add_skelbima" type="button" className="btn btn-success me-2">
             + Pridėti skelbimą

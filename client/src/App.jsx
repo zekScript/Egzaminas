@@ -6,16 +6,11 @@ import SignIn from './signin/SignIn'
 import LogIn from './login/LogIn'
 import AdminTickets from './admin/tickets/AdminTickets'
 import Home from './home/Home'
-import MakeTicket from './make-ticket/MakeTicket'
-import CurrentTicket from './view/viewid/CurrentTicket'
-import AllMyTickets from './mytickets/all-made-tickets/AllMyTickets'
-import Faqs from './faqs/Faqs'
 import SearchPage from './pages/Search/Search'
 import Add_skelbima from './pages/Search/add_skelbima'
 import CarListings from './pages/user/CarListings'
 import NotFound from './pages/NotFound/NotFound'
 import ViewPosts from './pages/userPostsAndWishlist/viewPosts'
-import Wishlist from './pages/userPostsAndWishlist/Wishlist'
 import EditPost from './pages/userPostsAndWishlist/EditPost'
 
 function App() {
@@ -45,22 +40,6 @@ function App() {
       element:<User />
     },
     {
-      path:"/make-ticket",
-      element:<MakeTicket/>
-    },
-    {
-      path:"/view/:id",
-      element:<CurrentTicket/>
-    },
-    {
-      path:"/:id/tickets",
-      element:<AllMyTickets/>
-    },
-    {
-      path:"/faqs",
-      element:<Faqs/>
-    },
-    {
       path:"/search",
       element:<SearchPage/>
     },
@@ -69,17 +48,14 @@ function App() {
       element:<Add_skelbima/>
     },
     {
-      path:"/:id/car_listings",
+      path:"/:id/renginys",
       element:<CarListings/>
     },
     {
       path:"/:id/posts",
       element:<ViewPosts/>
     },
-    {
-      path:"/my-wishlist",
-      element:<Wishlist/>
-    },
+    
     {
       path:"/edit",
       element:<EditPost/>
