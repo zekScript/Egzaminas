@@ -26,17 +26,6 @@ const Navbar = () => {
                 Norai
               </a>
             </li> */}
-            <li className="nav-item">
-              <a href="/make-ticket" className="nav-link link-body-emphasis px-2">
-                Kontaktuoti pagalbos
-              </a>
-            </li>
-            <li className="nav-item">
-              <a href="/faqs" className="nav-link link-body-emphasis px-2">
-                FAQs
-              </a>
-              
-            </li>
           </ul>
           <ul className="nav">
             {isLoggedIn ? (
@@ -57,23 +46,21 @@ const Navbar = () => {
           </a>
           <ul className="dropdown-menu dropdown-menu-end shadow">
             <li className="dropdown-header fw-bold">{user.name}</li>
-            <li><hr className="dropdown-divider" /></li>
 
-            <li><a className="dropdown-item" href="/make-ticket">Padaryti tiketa</a></li>
-            <li><a className="dropdown-item" href={`/${user.id}/tickets`}>Tavo tiketai</a></li>
+            
 
             {user.role === "ADMIN" && (
               <>
                 <li><hr className="dropdown-divider" /></li>
                 <li className="dropdown-header text-muted">Admin Panel</li>
-                <li><a className="dropdown-item" href="/admin/tickets">View All Tickets</a></li>
-                <li><a className="dropdown-item" href="/admin/users">View All Users</a></li>
+                <li><a className="dropdown-item" href="/admin/users">Visi vartotojai</a></li>
+                <li><a className="dropdown-item" href="/admin/posts">Visi skelbimai</a></li>
+
               </>
             )}
             <li><hr className="dropdown-divider" /></li>
-            <li><a className="dropdown-item" href={`/${user.id}/posts`}>Tavo skelbimai</a></li>
+            <li><a className="dropdown-item" href={`/${user.id}/posts`}>Mano skelbimai</a></li>
                         <li><a className="dropdown-item" href={`/add_skelbima`}>Pridėti skelbima</a></li>
-                                    {/* <li><a className="dropdown-item" href={`/my-wishlist`}>Norai</a></li> */}
 
 
 
@@ -81,7 +68,7 @@ const Navbar = () => {
             <li><hr className="dropdown-divider" /></li>
             <li>
               <button className="dropdown-item text-danger" onClick={logout}>
-                Sign Out
+               Atsijungti
               </button>
             </li>
           </ul>
@@ -90,12 +77,12 @@ const Navbar = () => {
               <>
                 <li className="nav-item">
                   <a href="/login" className="nav-link link-body-emphasis px-2">
-                    Login
+                    Prisijungti
                   </a>
                 </li>
                 <li className="nav-item">
                   <a href="/signin" className="nav-link link-body-emphasis px-2">
-                    Sign up
+                    Registruotis
                   </a>
                 </li>
               </>
@@ -112,7 +99,7 @@ const Navbar = () => {
             <span className="fs-4">SkelbiuHub.org</span>
           </a>
           <a href="/add_skelbima" type="button" className="btn btn-success me-2">
-            + Pridėti skelbimą
+            + Sukurti nauja renginio skelbimą
           </a>
         </div>
       </header>

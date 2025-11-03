@@ -32,7 +32,7 @@ function App() {
       element:<LogIn/>
     },
     {
-      path:"/admin/tickets",
+      path:"/admin/posts",
       element:<AdminTickets/>
     },
     {

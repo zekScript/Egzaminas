@@ -133,6 +133,7 @@ export const addSkelbima = async (req, res) => {
     const {
       title,
       description,
+      price
     } = req.body;
 
     // Get all uploaded image file paths
@@ -143,9 +144,29 @@ export const addSkelbima = async (req, res) => {
       imageUrl, // array of image paths
       title,
       description,
+      price
     });
     const savedData = await newSkelbimas.save();
     res.status(200).json(savedData);
+  } catch (err) {
+    res.status(500).json({ errorMessage: err.message });
+  }
+};
+
+export const updateTicketStatus = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { status } = req.body;
+    const ticketExist = await Post.findById(id);
+    if (!ticketExist) {
+      return res.status(404).json({ message: "Ticket by id not found" });
+    }
+    const updatedTicket = await Post.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
+    res.status(200).json(updatedTicket);
   } catch (err) {
     res.status(500).json({ errorMessage: err.message });
   }
@@ -179,35 +200,28 @@ export const searchSkelbimai = async (req, res) => {
     const query = {};
     let sortOption = {};
 
-    if (req.query.minPrice) query.price = { $gte: Number(req.query.minPrice) };
-    if (req.query.maxPrice) query.price = { ...query.price, $lte: Number(req.query.maxPrice) };
-    if (req.query.minMileage) query.mileage = { $gte: Number(req.query.minMileage) };
-    if (req.query.maxMileage) query.mileage = { ...query.mileage, $lte: Number(req.query.maxMileage) };
-    if (req.query.fuelType) query.fuelType = req.query.fuelType;
-    if (req.query.carName) query.carName = req.query.carName;
-    if (req.query.carType) query.carType = req.query.carType;
-    if (req.query.model) query.model = req.query.model;
-    if (req.query.transmission) query.transmission = req.query.transmission;
-    // if (req.query.engineLiter)  query.engineLiter = req.query.engineLiter;
+    
+    // if (req.query.title) query.title = req.query.title;
+    if (req.query.description) query.description = req.query.description;
 
 
     // Date filtering
-    if (req.query.startDate && req.query.endDate) {
-      query.$expr = {
-        $and: [
-          { $gte: [{ $year: "$firstRegistration" }, Number(req.query.startDate)] },
-          { $lte: [{ $year: "$firstRegistration" }, Number(req.query.endDate)] },
-        ],
-      };
-    } else if (req.query.startDate) {
-      query.$expr = {
-        $eq: [{ $year: "$firstRegistration" }, Number(req.query.startDate)],
-      };
-    } else if (req.query.endDate) {
-      query.$expr = {
-        $eq: [{ $year: "$firstRegistration" }, Number(req.query.endDate)],
-      };
-    }
+    // if (req.query.startDate && req.query.endDate) {
+    //   query.$expr = {
+    //     $and: [
+    //       { $gte: [{ $year: "$firstRegistration" }, Number(req.query.startDate)] },
+    //       { $lte: [{ $year: "$firstRegistration" }, Number(req.query.endDate)] },
+    //     ],
+    //   };
+    // } else if (req.query.startDate) {
+    //   query.$expr = {
+    //     $eq: [{ $year: "$firstRegistration" }, Number(req.query.startDate)],
+    //   };
+    // } else if (req.query.endDate) {
+    //   query.$expr = {
+    //     $eq: [{ $year: "$firstRegistration" }, Number(req.query.endDate)],
+    //   };
+    // }
 
     // Sorting
     switch (req.query.sortBy) {

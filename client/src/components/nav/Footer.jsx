@@ -12,7 +12,7 @@ const Footer = () => {
               href="/"
               className="d-flex align-items-center mb-3 text-decoration-none"
             >
-              <h4 className="fw-bold text-secondary">AutoHub.lt</h4>
+              <h4 className="fw-bold text-secondary">SkelbiuHub.org</h4>
             </a>
             <p className="text-muted mb-0">&copy; 2025 EuroHub UAB.</p>
           </div>
@@ -24,23 +24,11 @@ const Footer = () => {
               <li className="nav-item mb-2">
                 <a href="/" className="nav-link p-0 text-muted">Pagrindas</a>
               </li>
-              <li className="nav-item mb-2">
-                <a href="/faqs" className="nav-link p-0 text-muted">FAQs</a>
-              </li>
+              
             </ul>
           </div>
 
-          {/* Section 2 */}
-          <div className="col mb-3">
-            <h5 className="fw-semibold">Pagalba</h5>
-            <ul className="nav flex-column">
-              
-              <li className="nav-item mb-2">
-                <a href="/make-ticket" className="nav-link p-0 text-muted">Atidaryti ticketa</a>
-              </li>
-              
-            </ul>
-          </div>
+          
 
           {/* Social / Contact */}
           <div className="col mb-3">

@@ -53,24 +53,44 @@ const Search = () => {
 
       {/* Results */}
       <div className="results-section-dark">
-        <h1>Nesenai sukurti renginiu skelbimai</h1>
-        <div className="results-list-dark">
+        <div className="result-listing mt-3">
+        <h1>Neseniai sukurti renginiu skelbimai</h1>
 
 {fetchedAllListings.map((post, index) => (
-          <a href={`/${post._id}/renginys`} style={{textDecoration: "none"}} className="listing-card-dark" key={index}>
+          <a href={`/${post._id}/renginys`} style={{textDecoration: "none", marginTop: "15px"}} className="d-flex w-100 "  key={index}>
             <img
               src={`http://localhost:8000${post.imageUrl[0]}`}
-
+              style={{width: "240px", height: "180px", display: "block"}}
               alt={post.title}
               className="listing-img-dark"
             />
-            <div className="listing-info-dark">
+            <div className="d-flex  w-100" style={{flexDirection: "column", marginLeft: "32px"}}>
+<div className="listing-info-result text-muted ml-0 w-100">
               <div className="listing-content w-100">
               <p>{post.title}</p>
-              <p>{truncateText(post.description, 25)} </p>
+
               </div>
               
             </div>
+           <hr/>
+              <div className="d-flex align-items-center justify-content-start gap-3 text-light" style={{fontSize: "14px"}}>
+                <div style={{display: "flex", flexDirection: "column"}}>
+ <div className="d-flex align-items-center justify-content-start gap-3">
+
+                <p className="fs-4">{truncateText(post.description, 50)}</p>
+
+                </div>
+                
+                </div>
+               
+  
+  
+</div>
+
+
+            </div>
+            
+            
           </a>
         ))}
 

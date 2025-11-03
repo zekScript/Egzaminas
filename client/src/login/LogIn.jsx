@@ -38,7 +38,7 @@ const LogIn = () => {
       position: "top-right",
       duration: 3000
     })
-
+navigate("/")
     }
 
   };

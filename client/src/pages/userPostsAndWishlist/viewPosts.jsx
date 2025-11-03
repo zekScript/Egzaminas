@@ -42,7 +42,7 @@ const handlePostDelete = async (params) =>{
       method: "DELETE",
     })
     if(reqDeletion.ok){
-      toast.error(
+      toast.success(
               `Skelbimas sėkmingai Ištrintas. Puslapis persikraus per 5 sekundes`,
               {
                 position: "top-right",
@@ -73,7 +73,7 @@ const handlePostDelete = async (params) =>{
       {/* No tickets */}
       {!loading && posts.length === 0 && (
         <div className="alert alert-info text-center">
-          You don’t have any tickets yet. Create one to get started!
+          Tu neturi skelbimu. Eik susikurti skelbima
         </div>
       )}
 

@@ -1,6 +1,6 @@
 import e from "express";
 
-import { getAllUsers, getUserById, logInUser, signInUser, update, deleteUser, addSkelbima, getSkelbimasMadeByUser, searchSkelbimai, getAllSkelbimai, getAllMadeByUserPost, deleteMyListing, updateMylisting, findPostByPostId } from "../controller/userController.js";
+import { getAllUsers, updateTicketStatus, getUserById, logInUser, signInUser, update, deleteUser, addSkelbima, getSkelbimasMadeByUser, searchSkelbimai, getAllSkelbimai, getAllMadeByUserPost, deleteMyListing, updateMylisting, findPostByPostId } from "../controller/userController.js";
 import {authenticate, requireAdmin} from "../middleware/middleware.js"
 import multer from "multer";
 import path from "path";
@@ -33,9 +33,11 @@ route.post(
 route.get("/skelbimai/:id", getSkelbimasMadeByUser)
 route.get("/listings/search", searchSkelbimai)
 route.get("/allListings", getAllSkelbimai)
+route.get("/admin/allListings", requireAdmin, getAllSkelbimai)
 route.get("/mylistings/:id", getAllMadeByUserPost)
 route.delete("/delete/myListings/:id", deleteMyListing)
 route.put("/update/myListing/:id", updateMylisting)
+route.put("/update/myListingStatus/:id", updateTicketStatus)
 route.get("/findListingByPostId/:id", findPostByPostId)
 
 export default route

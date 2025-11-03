@@ -56,8 +56,8 @@ const Add_skelbima = () => {
       <form onSubmit={handleSubmit} className="row g-3 p-4 rounded shadow-sm">
         <div className="form-container">
           <label>Turinys</label>
-          <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Jomajo cirkas..." ></input>
-          <label>Aprašymas</label>
+          <input className="form-control mt-3" type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Jomajo cirkas..." ></input>
+          <label className="mt-3">Aprašymas</label>
           <textarea
             onChange={(e) => setDescription(e.target.value)}
             name="description"
@@ -71,11 +71,11 @@ const Add_skelbima = () => {
             type="file"
             accept="image/*"
             name="images"
-            className="form-control"
+            className="form-control mt-3"
             multiple
             required
           />
-          <button type="submit">Sukurti skelbimą</button>
+          <button type="submit" class="btn btn-success mt-3 d-flex justify-content-end" >Sukurti skelbima</button>
         </div>
 
       </form>
