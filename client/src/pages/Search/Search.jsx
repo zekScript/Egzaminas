@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react"
-import { useLoaderData, useLocation, useNavigate, useSearchParams } from "react-router"
+import { useLocation, useNavigate, useSearchParams } from "react-router"
 import "./sidebars.css"
-import { numberWithCommas } from "../../components/funcs/bigNumberSeparation"
 import "./searchResult.css"
-import formatDate from "../../components/funcs/formatDate"
-import engineConverter from "../../components/funcs/horsepowerAndKWConverter"
+import { truncateText } from "../../truncText/TruncText";
+
 
 const SearchPage = () => {
   const [searchParams] = useSearchParams()
@@ -13,32 +12,15 @@ const SearchPage = () => {
   const [currentSortingFilter, setCurrentSortingFilter] = useState("cheapest")
 
   // Extract params
-  const startDate = searchParams.get("startDate")
-  const endDate = searchParams.get("endDate")
-  const minPrice = searchParams.get("minPrice")
-  const maxPrice = searchParams.get("maxPrice")
-  const minMileage = searchParams.get("minMileage")
-  const maxMileage = searchParams.get("maxMileage")
-  const fuelType = searchParams.get("fuelType")
-  const model = searchParams.get("model")
-  const carName = searchParams.get("carName")
-  const carType = searchParams.get("carType")
+  const q = searchParams.get("q")
+  console.log(q)
   const sortBy = searchParams.get("sortBy")
   useEffect(() => {
     const fetchListings = async () => {
       setLoading(true)
       // Build query string
       const params = new URLSearchParams()
-      if (startDate) params.append("startDate", startDate)
-      if (endDate) params.append("endDate", endDate)
-      if (minPrice) params.append("minPrice", minPrice)
-      if (maxPrice) params.append("maxPrice", maxPrice)
-      if (minMileage) params.append("minMileage", minMileage)
-      if (maxMileage) params.append("maxMileage", maxMileage)
-      if (fuelType) params.append("fuelType", fuelType)
-      if (model) params.append("model", model)
-      if (carName) params.append("carName", carName)
-      if(carType) params.append("carType", carType)
+      if(q) params.append("q", q)
       if(sortBy) params.append("sortBy", sortBy)
 
       const res = await fetch(`http://localhost:8000/api/listings/search?${params.toString()}`)
@@ -52,270 +34,52 @@ const SearchPage = () => {
   const nav = useNavigate()
   const location = useLocation()
 
-  const handleChangeFilters = (value) => {
-  const params = new URLSearchParams(location.search);
-  params.set("sortBy", value); 
-  setCurrentSortingFilter(value);
-  nav(`${location.pathname}?${params.toString()}`);
-};
+  
 
   
 console.log(results)
 
   return (
     <div className="m-auto w-50">
-      <select name="sortBy" value={currentSortingFilter} onChange={(e) => handleChangeFilters(e.target.value)}>
+      {/* <select name="sortBy" value={currentSortingFilter} onChange={(e) => handleChangeFilters(e.target.value)}>
           <option value="cheapest">Pigiausi viršuje</option>
           <option value="most_expensive">Brangiausi viršuje</option>
           <option value="newest">Naujausi viršuje</option>
           <option value="oldest">Seniausi viršuje</option>
           <option value="mileage_highest">mažiausia rida</option>
           <option value="mileage_lowest">didžiausia rida</option>
-        </select>
+        </select> */}
     <div className="d-flex" style={{marginRight: "32px"}}>
-
-      {/* <div className="flex-shrink-0 p-3 w-25" >
-        <a
-          href="/"
-          className="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom"
-        >
-          <svg
-            className="bi pe-none me-2"
-            width="30"
-            height="24"
-            aria-hidden="true"
-          >
-            <use xlink:href="#bootstrap"></use>
-          </svg>
-          <span className="fs-5 fw-semibold">Collapsible</span>
-        </a>
-        <ul className="list-unstyled ps-0">
-          <li className="mb-1">
-            <button
-              className="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-              data-bs-toggle="collapse"
-              data-bs-target="#home-collapse"
-              aria-expanded="true"
-            >
-              Home
-            </button>
-            <div className="collapse show" id="home-collapse">
-              <ul className="btn-toggle-nav list-unstyled fw-normal pb-1 small col-gap-2">
-                <li>
-                  <div className="checkbox p-3 d-flex flex-column">
-                <label>
-                  <input type="checkbox" value="Balta" /> Balta
-                  
-                </label>
-                <label>
-                  <input type="checkbox" value="Juoda" /> Juoda
-                </label>
-              </div>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="link-body-emphasis d-inline-flex text-decoration-none rounded"
-                    >Updates</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="link-body-emphasis d-inline-flex text-decoration-none rounded"
-                    >Reports</a
-                  >
-                </li>
-              </ul>
-            </div>
-          </li>
-          <li className="mb-1">
-            <button
-              className="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-              data-bs-toggle="collapse"
-              data-bs-target="#dashboard-collapse"
-              aria-expanded="false"
-            >
-              Dashboard
-            </button>
-            <div className="collapse" id="dashboard-collapse">
-              <ul className="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li>
-                  <a
-                    href="#"
-                    className="link-body-emphasis d-inline-flex text-decoration-none rounded"
-                    >Overview</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="link-body-emphasis d-inline-flex text-decoration-none rounded"
-                    >Weekly</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="link-body-emphasis d-inline-flex text-decoration-none rounded"
-                    >Monthly</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="link-body-emphasis d-inline-flex text-decoration-none rounded"
-                    >Annually</a
-                  >
-                </li>
-              </ul>
-            </div>
-          </li>
-          <li className="mb-1">
-            <button
-              className="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-              data-bs-toggle="collapse"
-              data-bs-target="#orders-collapse"
-              aria-expanded="false"
-            >
-              Orders
-            </button>
-            <div className="collapse" id="orders-collapse">
-              <ul className="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li>
-                  <a
-                    href="#"
-                    className="link-body-emphasis d-inline-flex text-decoration-none rounded"
-                    >New</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="link-body-emphasis d-inline-flex text-decoration-none rounded"
-                    >Processed</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="link-body-emphasis d-inline-flex text-decoration-none rounded"
-                    >Shipped</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="link-body-emphasis d-inline-flex text-decoration-none rounded"
-                    >Returned</a
-                  >
-                </li>
-              </ul>
-            </div>
-          </li>
-          <li className="border-top my-3"></li>
-          <li className="mb-1">
-            <button
-              className="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-              data-bs-toggle="collapse"
-              data-bs-target="#account-collapse"
-              aria-expanded="false"
-            >
-              Account
-            </button>
-            <div className="collapse" id="account-collapse">
-              <ul className="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li>
-                  <a
-                    href="#"
-                    className="link-body-emphasis d-inline-flex text-decoration-none rounded"
-                    >New...</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="link-body-emphasis d-inline-flex text-decoration-none rounded"
-                    >Profile</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="link-body-emphasis d-inline-flex text-decoration-none rounded"
-                    >Settings</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="link-body-emphasis d-inline-flex text-decoration-none rounded"
-                    >Sign out</a
-                  >
-                </li>
-              </ul>
-            </div>
-          </li>
-        </ul>
-      </div> */}
-      
       {loading && <div>Loading...</div>}
       {!loading && results.length === 0 && <div>No results found.</div>}
       
       <div className="result-listing mt-3 " style={{textDecoration: "none"}}>
         
-{results.map((car, index) => (
-          <a href={`/${car._id}/car_listings`} style={{textDecoration: "none", marginTop: "15px"}} className="d-flex w-100 "  key={index}>
+{results.map((post, index) => (
+          <a href={`/${post._id}/renginys`} style={{textDecoration: "none", marginTop: "15px"}} className="d-flex w-100 "  key={index}>
             <img
-              src={`http://localhost:8000${car.imageUrl[0]}`}
+              src={`http://localhost:8000${post.imageUrl[0]}`}
               style={{width: "240px", height: "180px", display: "block"}}
-              alt={car.model}
+              alt={post.title}
               className="listing-img-dark"
             />
             <div className="d-flex  w-100" style={{flexDirection: "column", marginLeft: "32px"}}>
 <div className="listing-info-result text-muted ml-0 w-100">
-              {/* <h4>{car.model}</h4> */}
               <div className="listing-content w-100">
-              <p>{car.carName} {car.model} {car.engineLiter}L</p>
-              </div>
-              <div className="text-center" >
-              <p className="text-warning fw-bold" style={{fontSize: "18px", fontWeight: "bold"}}>€{numberWithCommas(car.price)} </p>
+              <p>{post.title}</p>
 
               </div>
+              
             </div>
            <hr/>
               <div className="d-flex align-items-center justify-content-start gap-3 text-light" style={{fontSize: "14px"}}>
                 <div style={{display: "flex", flexDirection: "column"}}>
  <div className="d-flex align-items-center justify-content-start gap-3">
-<div className="d-flex align-items-center gap-2">
-    <p className="mb-0">{car.mileage} km</p>
-    <div className="vr"></div>
-  </div>
-  <div className="d-flex align-items-center gap-2">
-    <p className="mb-0">{formatDate(car.firstRegistration)}</p>
-    <div className="vr"></div>
-  </div>
-  <div className="d-flex align-items-center gap-2">
-    <p className="mb-0">{car.fuelType}</p>
-    <div className="vr"></div>
-  </div>
-  
-  <div className="d-flex align-items-center gap-2">
-    <p className="mb-0">{car.enginePower}kW</p>
-    <div className="vr"></div>
-  </div>
-  <div className="d-flex align-items-center gap-2">
-    <p className="mb-0">{car.carType}</p>
-        <div className="vr"></div>
 
-  </div>
+                <p className="fs-4">{truncateText(post.description, 50)}</p>
+
                 </div>
-                <div className="mt-2">
-                  <div className="d-flex align-items-center gap-2">
-                  <p className="mb-0">{car.color}</p>
-                  <div className="vr"></div>
-                </div>
-                </div>
+                
                 </div>
                
   
@@ -335,15 +99,7 @@ console.log(results)
         
   </div>
   
-{/* <nav aria-label="Page navigation example" className=" w-100 d-flex justify-center">
-  <ul class="pagination">
-    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-    <li class="page-item"><a class="page-link" href="#">1</a></li>
-    <li class="page-item"><a class="page-link" href="#">2</a></li>
-    <li class="page-item"><a class="page-link" href="#">3</a></li>
-    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-  </ul>
-</nav> */}
+
     </div>
   )
 }

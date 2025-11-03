@@ -4,16 +4,20 @@ import { Link } from 'react-router'
 import { useNavigate } from 'react-router'
 import Cookies from "js-cookie"
 import toast from 'react-hot-toast'
+import { getCurrentUser } from '../../getCurrentUser/getCurrentUser'
 
 const AdminTickets = () => {
   const [tickets, setTickets] = useState([])
   const navigate = useNavigate()
 
+
+  
+
   useEffect(() => {
     const fetchData = async () => {
       try{
           const token = Cookies.get("token");
-        const res = await fetch("http://localhost:8000/api/tickets", {
+        const res = await fetch("http://localhost:8000/api/allListings", {
           method: "GET",
           headers: {
             "content-type": "application/json",
@@ -24,6 +28,9 @@ const AdminTickets = () => {
         const json = await res.json()
         if(res.status === 403){
           navigate("/")
+        }
+        if(res.status === 401){
+          navigate("/login")
         }
         if(res.ok){
           setTickets(json)
@@ -37,7 +44,7 @@ const AdminTickets = () => {
 
   const handleStatusChange = async (id, newStatus) => {
     try {
-      const res = await fetch(`http://localhost:8000/api/update/ticket/${id}`, {
+      const res = await fetch(`http://localhost:8000/api/update/myListingStatus/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),
@@ -83,13 +90,15 @@ const AdminTickets = () => {
                     value={ticket.status}
                     onChange={e => handleStatusChange(ticket._id, e.target.value)}
                   >
-                    <option value="open">Open</option>
-                    <option value="in review">In Review</option>
-                    <option value="closed">Closed</option>
+                    <option value="Atidarytas">Atidarytas</option>
+                    <option value="Peržiurima">Peržiurima</option>
+                    <option value="uždaryta">uždaryta</option>
+                    <option value="užblokuota">užblokuota</option>
                   </select>
                 </td>
                 <td>
-                  <Link to={`/view/${ticket._id}`} type='button'>View</Link>
+                  <Link to={`/${ticket._id}/renginys`} type='button'>View</Link>
+
                   {/* You can remove or update this button as needed */}
                 </td>
               </tr>

@@ -1,8 +1,7 @@
 import e from "express";
 
-import { logInUser, deleteMyListing, getAllMadeByUserPost, addSkelbima, deleteUser, getAllUsers, getUserById, update, signInUser, getAllTickets, updateTicketStatus, getTicketById, addTicketMessage, FindTicketMadeByUser, getSkelbimasMadeByUser, searchSkelbimai, getAllSkelbimai, updateMylisting, findPostByPostId } from "../controller/userController.js";
+import { getAllUsers, updateTicketStatus, getUserById, logInUser, signInUser, update, deleteUser, addSkelbima, getSkelbimasMadeByUser, searchSkelbimai, getAllSkelbimai, getAllMadeByUserPost, deleteMyListing, updateMylisting, findPostByPostId } from "../controller/userController.js";
 import {authenticate, requireAdmin} from "../middleware/middleware.js"
-import { createTicket } from "../controller/userController.js";
 import multer from "multer";
 import path from "path";
 const route = e.Router();
@@ -17,21 +16,12 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage });
-
-// route.post("/user", create) // create
 route.get("/users", authenticate, requireAdmin, getAllUsers) // read
 route.get("/user/:id", getUserById) // read
 route.post("/login", logInUser);
 route.put("/update/user/:id", authenticate, requireAdmin, update) // update
 route.post("/signin", signInUser)
 route.delete("/delete/user/:id", deleteUser) // delete
-// TICKET RESTFUL
-route.get("/ticket/:id", getTicketById)
-route.post("/ticket", authenticate, createTicket);
-route.get("/tickets", authenticate, requireAdmin, getAllTickets)
-route.put("/update/ticket/:id", updateTicketStatus)
-route.post("/ticket/:id/message", authenticate, addTicketMessage);
-route.get("/:id/mytickets", FindTicketMadeByUser)
 
 // Skelbimo restful
 route.post(
@@ -43,9 +33,11 @@ route.post(
 route.get("/skelbimai/:id", getSkelbimasMadeByUser)
 route.get("/listings/search", searchSkelbimai)
 route.get("/allListings", getAllSkelbimai)
+route.get("/admin/allListings", requireAdmin, getAllSkelbimai)
 route.get("/mylistings/:id", getAllMadeByUserPost)
 route.delete("/delete/myListings/:id", deleteMyListing)
 route.put("/update/myListing/:id", updateMylisting)
+route.put("/update/myListingStatus/:id", updateTicketStatus)
 route.get("/findListingByPostId/:id", findPostByPostId)
 
 export default route

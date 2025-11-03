@@ -93,10 +93,11 @@
 }
 
 .results-list-dark {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 3fr));
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  /* grid-template-columns: repeat(auto-fill, minmax(150px, 3fr)); */
   gap: 0.8rem;
-  justify-items: center;
   padding: 2rem 15px 10px 15px
   
 }

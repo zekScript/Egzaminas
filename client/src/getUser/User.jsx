@@ -22,8 +22,8 @@ export const User = () => {
           }
         })
         const json = await res.json()
-        if(res.status === 403) {
-          navigate("/")
+        if(res.status === 401) {
+          navigate("/login")
         }
         if(res.ok){
           setUsers(json)

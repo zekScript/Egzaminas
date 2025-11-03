@@ -1,4 +1,4 @@
-import { User, Ticket, Post } from "../model/userModel.js";
+import { User, Post } from "../model/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -126,52 +126,28 @@ export const deleteUser = async (req, res) => {
   }
 };
 
-// export const signInUser = async (req, res) => {
-//        const newUser = new User(req.body);
-//        const { email, password } = newUser
-//        const existingUser = await findUserByEmail(email)
-//        if (existingUser) return res.status(400).json({message: "Email already exists"})
-//        try {
-//     const hashedPassword = await hashPassword(password)
-//     const newUser = new User({ name, email, password: hashedPassword });
-//        await newUser.save();
-//        return res.status(200).json({ message: "User Made successfully" });
 
-//   } catch (error) {
-//        res.status(500).json({errorMessage:err.message})
-//   }
-
-// }
-
-export const createTicket = async (req, res) => {
+export const addSkelbima = async (req, res) => {
   try {
-    const { title, description } = req.body;
-    const userId = req.user.id; // set by authenticate middleware
-
-    // Create a new Ticket document
-    const newTicket = new Ticket({
+    const userId = req.user.id;
+    const {
       title,
       description,
-      user: userId, // reference to the authenticated user
+      price
+    } = req.body;
+
+    // Get all uploaded image file paths
+    const imageUrl = req.files ? req.files.map(file => `/uploads/${file.filename}`) : [];
+
+    const newSkelbimas = new Post({
+      author: userId,
+      imageUrl, // array of image paths
+      title,
+      description,
+      price
     });
-
-    // Save the ticket to the database
-    const savedTicket = await newTicket.save();
-
-    // Respond with the saved ticket
-    res.status(201).json(savedTicket);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-export const getAllTickets = async (req, res) => {
-  try {
-    const ticketData = await Ticket.find();
-    if (!ticketData || ticketData.length === 0) {
-      return res.status(404).json({ message: "User data not found" });
-    }
-    res.status(200).json(ticketData);
+    const savedData = await newSkelbimas.save();
+    res.status(200).json(savedData);
   } catch (err) {
     res.status(500).json({ errorMessage: err.message });
   }
@@ -181,136 +157,16 @@ export const updateTicketStatus = async (req, res) => {
   try {
     const id = req.params.id;
     const { status } = req.body;
-    const ticketExist = await Ticket.findById(id);
+    const ticketExist = await Post.findById(id);
     if (!ticketExist) {
       return res.status(404).json({ message: "Ticket by id not found" });
     }
-    const updatedTicket = await Ticket.findByIdAndUpdate(
+    const updatedTicket = await Post.findByIdAndUpdate(
       id,
       { status },
       { new: true }
     );
     res.status(200).json(updatedTicket);
-  } catch (err) {
-    res.status(500).json({ errorMessage: err.message });
-  }
-};
-
-export const getTicketById = async (req, res) => {
-  try {
-    const id = req.params.id;
-    const ticketExists = await Ticket.findById(id);
-    if (!ticketExists) {
-      return res.status(404).json({ message: "Ticket by id not found" });
-    }
-    res.status(200).json(ticketExists);
-  } catch (err) {
-    res.status(500).json({ errorMessage: err.message });
-  }
-};
-
-export const getTicketByIdMessage = async (req, res) => {
-  try {
-    const ticket = await Ticket.findById(req.params.id)
-      .populate("user", "name") // for ticket owner
-      .populate("messages.sender", "name role"); // for chat messages
-
-    if (!ticket) {
-      return res.status(404).json({ message: "Ticket not found" });
-    }
-    res.status(200).json(ticket);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-export const addTicketMessage = async (req, res) => {
-  try {
-    const ticketId = req.params.id;
-    const { text } = req.body;
-    const sender = req.user.id;
-    const message = { sender, text };
-
-    await Ticket.findByIdAndUpdate(ticketId, { $push: { messages: message } });
-
-    const updatedTicket = await Ticket.findById(ticketId).populate(
-      "messages.sender",
-      "name role"
-    );
-
-    res.status(200).json(updatedTicket.messages);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-export const FindTicketMadeByUser = async (req, res) => {
-  try {
-    const userId = req.params.id;
-
-    // Find all tickets created by that user
-    const tickets = await Ticket.find({ user: userId });
-
-    if (!tickets || tickets.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "No tickets found for this user." });
-    }
-
-    res.status(200).json({ tickets });
-  } catch (err) {
-    console.error("Error fetching tickets by user:", err);
-    res.status(500).json({ message: "Server error while fetching tickets." });
-  }
-};
-
-export const addSkelbima = async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const {
-      price,
-      model,
-      mileage,
-      carName,
-      engineLiter,
-      carType,
-      fuelType,
-      description,
-      enginePower,
-      defects,
-      color,
-      steeringPosition,
-      condition,
-      firstRegistration,
-      contactNumber,
-      transmission
-    } = req.body;
-
-    // Get all uploaded image file paths
-    const imageUrl = req.files ? req.files.map(file => `/uploads/${file.filename}`) : [];
-
-    const newSkelbimas = new Post({
-      price,
-      author: userId,
-      mileage,
-      fuelType,
-      engineLiter,
-      carType,
-      imageUrl, // array of image paths
-      description,
-      enginePower,
-      transmission,
-      defects,
-      color,
-      model,
-      carName,
-      steeringPosition,
-      condition,
-      firstRegistration,
-      contactNumber,
-    });
-    const savedData = await newSkelbimas.save();
-    res.status(200).json(savedData);
   } catch (err) {
     res.status(500).json({ errorMessage: err.message });
   }
@@ -344,35 +200,28 @@ export const searchSkelbimai = async (req, res) => {
     const query = {};
     let sortOption = {};
 
-    if (req.query.minPrice) query.price = { $gte: Number(req.query.minPrice) };
-    if (req.query.maxPrice) query.price = { ...query.price, $lte: Number(req.query.maxPrice) };
-    if (req.query.minMileage) query.mileage = { $gte: Number(req.query.minMileage) };
-    if (req.query.maxMileage) query.mileage = { ...query.mileage, $lte: Number(req.query.maxMileage) };
-    if (req.query.fuelType) query.fuelType = req.query.fuelType;
-    if (req.query.carName) query.carName = req.query.carName;
-    if (req.query.carType) query.carType = req.query.carType;
-    if (req.query.model) query.model = req.query.model;
-    if (req.query.transmission) query.transmission = req.query.transmission;
-    // if (req.query.engineLiter)  query.engineLiter = req.query.engineLiter;
+    
+    // if (req.query.title) query.title = req.query.title;
+    if (req.query.description) query.description = req.query.description;
 
 
     // Date filtering
-    if (req.query.startDate && req.query.endDate) {
-      query.$expr = {
-        $and: [
-          { $gte: [{ $year: "$firstRegistration" }, Number(req.query.startDate)] },
-          { $lte: [{ $year: "$firstRegistration" }, Number(req.query.endDate)] },
-        ],
-      };
-    } else if (req.query.startDate) {
-      query.$expr = {
-        $eq: [{ $year: "$firstRegistration" }, Number(req.query.startDate)],
-      };
-    } else if (req.query.endDate) {
-      query.$expr = {
-        $eq: [{ $year: "$firstRegistration" }, Number(req.query.endDate)],
-      };
-    }
+    // if (req.query.startDate && req.query.endDate) {
+    //   query.$expr = {
+    //     $and: [
+    //       { $gte: [{ $year: "$firstRegistration" }, Number(req.query.startDate)] },
+    //       { $lte: [{ $year: "$firstRegistration" }, Number(req.query.endDate)] },
+    //     ],
+    //   };
+    // } else if (req.query.startDate) {
+    //   query.$expr = {
+    //     $eq: [{ $year: "$firstRegistration" }, Number(req.query.startDate)],
+    //   };
+    // } else if (req.query.endDate) {
+    //   query.$expr = {
+    //     $eq: [{ $year: "$firstRegistration" }, Number(req.query.endDate)],
+    //   };
+    // }
 
     // Sorting
     switch (req.query.sortBy) {
@@ -459,42 +308,16 @@ export const updateMylisting = async (req, res) => {
   try{
     const id = req.params.id
     const {
-      price,
-      model,
-      mileage,
-      carName,
-      engineLiter,
-      carType,
-      fuelType,
       description,
-      enginePower,
-      defects,
-      color,
-      steeringPosition,
-      condition,
-      firstRegistration,
-      contactNumber,
-      transmission
+      title
     } = req.body;
 
     const updatedPost = await Post.findByIdAndUpdate(
       id,
-      {price,
-      model,
-      mileage,
-      carName,
-      engineLiter,
-      carType,
-      fuelType,
-      description,
-      enginePower,
-      defects,
-      color,
-      steeringPosition,
-      condition,
-      firstRegistration,
-      contactNumber,
-      transmission},
+      {
+        description,
+        title
+      },
       {new: true}
     )
      if (!updatedPost) {
